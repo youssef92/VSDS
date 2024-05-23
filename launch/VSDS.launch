@@ -1,0 +1,8 @@
+<launch>
+   <param name="VSDS_name" value="$(arg VSDS_name)"/>
+   <param name="Stiff_type" value="$(arg Stiff_type)"/>
+   <param name="VS_type" value="$(arg VS_type)"/>
+   <rosparam command="load" file="$(find VSDS)/config/$(arg VSDS_name)/Param.yaml"/>
+   <rosparam command="load" file="$(find VSDS)/config/vsds_param.yaml"/>
+  <node name="VSDS_main" pkg="VSDS" type="VSDS_main" output="screen" />
+</launch>

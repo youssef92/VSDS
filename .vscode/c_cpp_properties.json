@@ -1,0 +1,52 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/hwadong/catkin_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/hwadong/Youssef/RootLibrary/root/include/**",
+        "/home/hwadong/Youssef/RootLibrary/root/include/**",
+        "/home/hwadong/catkin_ws/src/SharedVIControl_pkg/include/**",
+        "/home/hwadong/catkin_ws/src/cbf_tanks_pkg/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/dmp-master/include/**",
+        "/home/hwadong/catkin_ws/src/force_torque_tools/force_torque_sensor_calib/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/fri-library-ros/include/**",
+        "/home/hwadong/catkin_ws/src/force_torque_tools/gravity_compensation/include/**",
+        "/home/hwadong/catkin_ws/src/hierarchical_varimpedance_control/include/**",
+        "/home/hwadong/catkin_ws/src/hri_kms_40_driver/include/**",
+        "/home/hwadong/catkin_ws/src/task-teaching-and-supervision/Robot_Manager/kuka_seed_commands/include/**",
+        "/home/hwadong/catkin_ws/src/kuka_template_new/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/kuka-lwr-ros/kuka_lwr/lwr_console/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/kuka-lwr-ros/kuka_lwr/lwr_controllers/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_felix/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/kuka-lwr-ros/kuka_lwr/lwr_fri/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/kuka-lwr-ros/kuka_lwr/lwr_hw/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/kuka-lwr-ros/lwr_ros_client/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/kuka-lwr-ros/kuka_lwr/lwr_ros_interface/include/**",
+        "/home/hwadong/catkin_ws/src/task-teaching-and-supervision/Robot_Manager/lwr_seed_control/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_service_provider/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/kuka-lwr-ros-examples/lwr_task_examples/lwr_simple_example/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_template/include/**",
+        "/home/hwadong/catkin_ws/src/opto_force_driver/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/passive-ds-control/include/**",
+        "/home/hwadong/catkin_ws/src/python_publisher_trial/include/**",
+        "/home/hwadong/catkin_ws/src/lwr_gbz/kuka-lwr-ros/robot_motion_generation/include/**",
+        "/home/hwadong/catkin_ws/src/steamvRTracker/include/**",
+        "/home/hwadong/catkin_ws/src/vsds_orient_tracking/include/**",
+        "/home/hwadong/catkin_ws/src/wsg_50/include/**",
+        "/home/hwadong/catkin_ws/src/wsg_50_control/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

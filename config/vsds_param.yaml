@@ -1,0 +1,11 @@
+number_int: 42 
+D_PICDS: [100, 200]
+F_disturbance: 25
+t_init_dist: 0.7
+t_final_dist: 0.9
+Disturbance_Flag: 0
+damping_vf: 230
+
+
+
+
