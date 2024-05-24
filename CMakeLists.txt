@@ -106,6 +106,11 @@ set( sources_vsds
   src/VSDS_src/Utility.cpp
   src/VSDS_src/min_jerk.cpp
   src/VSDS_src/global_ds.cpp
+  src/VSDS_src/VSDS_base.cpp
+  src/VSDS_src/VSDS_qp.cpp
+  src/VSDS_src/VSDS_vf.cpp
+  src/VSDS_src/VSDS_org.cpp
+  src/VSDS_src/VSDS_picds.cpp
 
 )
 

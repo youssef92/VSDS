@@ -1,14 +1,30 @@
+/*
+ * Author: Youssef Michel
+ * Description: This scipt implements the main control loop of the VSDS control law,
+ *              handling the communication with a Kuka Robot via FRI, recieving sensor
+ *              readings and sending force commands to the robot
+ *
+ * Usage: This code can be compiled and run using a standard C++ compiler.
+ *        Example compilation command: g++ example.cpp -o example
+ *        Example execution command: ./example
+ *
+ * Notes:
+ *  - This should be adapted to integrate VSDS with your own robot interface
+ */
+
+
+
+
 #include "boost/filesystem.hpp"
 
 #include "MotionGeneration.h"
 #include "PassiveControl.h"
 #include "Utility_fri.h"
+#include "VSDS_base.h"
 
 using namespace boost::filesystem;
 
 
-
-//*******************************************************************************************
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +32,9 @@ int main(int argc, char *argv[])
     ros::init(argc, argv, "VSDS_main");
     ros::NodeHandle nh;
     string DS_ModelName ;
+
+    string VS_type="qp" ; // org , qp , fd
+    nh.getParam("/VS_type",VS_type) ;
 
     FastResearchInterface	*FRI;
     std::string packPath = ros::package::getPath("VSDS");
@@ -85,7 +104,6 @@ int main(int argc, char *argv[])
             printf("VSDS control loop \n");
             drdSleep(1);
 
-
             if(startCartImpedanceCtrl(FRI, currentJointPosition)==0){
 
 
@@ -104,9 +122,27 @@ int main(int argc, char *argv[])
                 Vec x = x0;
                 int M = 2;
                 realtype x_c = x0(0);
-                VSDS *MyVSDS;
-                MyVSDS = new VSDS(x0.tail(2));
-                global_ds MyGlobalDS ;
+
+                string VS_type="qp" ; // org , qp , fd
+                nh.getParam("/VS_type",VS_type) ;
+
+                std::unique_ptr<VSDS_base> MyVSDS;
+
+                if (VS_type == "qp") {
+                    MyVSDS = std::make_unique<VSDS_qp>(x0.tail(2));
+                }
+                else if (VS_type == "fd") {
+                    MyVSDS = std::make_unique<VSDS_qp>(x0.tail(2));
+                }
+                else if (VS_type == "PI") {
+                    MyVSDS = std::make_unique<VSDS_picds>(x0.tail(2));
+                }
+
+                else {
+                   MyVSDS = std::make_unique<VSDS_org>(x0.tail(2));
+                }
+
+                global_ds MyGlobalDS =global_ds(M) ;
                 PassiveClosedLoopControl *my_control_passive  ;
                 my_control_passive = new PassiveClosedLoopControl( M,x0.tail(2),MyVSDS->GetAttractor() );
 
@@ -138,7 +174,6 @@ int main(int argc, char *argv[])
                 unsigned CycleCounter=0 ;
                 Vec q_dot_filt_prev= Vec::Zero(7) ;
 
-                float EstimatedExternalCartForcesTorques[6];
                 int done=1 ;
 
                 int DISTURBANCE_FLAG= 0 ;
@@ -214,19 +249,7 @@ int main(int argc, char *argv[])
                     desiredCartPose[11]=currentCartPose[11] ;
                     FRI->SetCommandedCartPose(desiredCartPose);
                     FRI->SetCommandedCartForcesAndTorques(CommandedForcesAndTorques) ;
-                    FRI->GetEstimatedExternalCartForcesAndTorques(EstimatedExternalCartForcesTorques);
-
-                    int i=0 ;
-                    Vec internal_Force_tool(3) ;
-                    Vec internal_Force_world(3) ;
-                    while(i<3){
-                        internal_Force_tool(i)=EstimatedExternalCartForcesTorques[i] ;
-                        i++ ;
-                    }
-                    internal_Force_world=Rot_mat*internal_Force_tool ;
-
-
-                    t += 0.002;
+                    t += dt;
                     CycleCounter++;
                 }
 

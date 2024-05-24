@@ -2,6 +2,10 @@
 
 #include "global_ds.h"
 
+global_ds::global_ds() {
+
+}
+
 void global_ds::Read_SEDS_FROMFile(string MuFile, string SigmaFile, string PriorsFile, string A_gFile,string att_File,Mat &Mu, Mat &Sigma, Vec &Priors, Mat &A_g, int M, int K_SEDS,Vec &att){
 
 
@@ -80,13 +84,12 @@ void global_ds::Read_SEDS_FROMFile(string MuFile, string SigmaFile, string Prior
 
 
 
-global_ds::global_ds()  {
+global_ds::global_ds(int n_dof)  {
 
-ROS_INFO("--------------Initializing VSDS-----------") ;
 
 int K_SEDS=3 ;
 ros::param::get("/K_SEDS", K_SEDS);
-n_DOF_=2 ;
+n_DOF_=n_dof ;
 std::string DS_ModelName ;
 ros::param::get("/VSDS_name",DS_ModelName);
 std::string packPath = ros::package::getPath("VSDS");
@@ -97,8 +100,6 @@ std::string PriorsFile = packPath + "/config/"+ DS_ModelName+ "/Priors.txt";
 std::string A_gFile = packPath + "/config/"+ DS_ModelName+ "/A_g.txt";
 std::string attFile = packPath + "/config/"+ DS_ModelName+ "/att.txt";
 
-
-
 Mu_=Mat::Ones(n_DOF_,K_SEDS);
 Priors_=Vec::Ones(K_SEDS);
 A_g_=Mat::Ones(n_DOF_,n_DOF_*K_SEDS);
@@ -108,7 +109,7 @@ att_=Vec::Zero(n_DOF_) ;
 Read_SEDS_FROMFile(MuFile, SigmaFile,  PriorsFile, A_gFile,attFile, Mu_, Sigma_, Priors_, A_g_,  n_DOF_,  K_SEDS,att_) ;
 
 
-ROS_INFO("Initialized Global DS !!! ");
+ROS_INFO("Initialized Global DS ! ");
 
 }
 

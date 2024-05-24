@@ -11,6 +11,10 @@ using namespace std;
 using namespace special_math_functions;
 using namespace StiffnessProfiles;
 
+// Implements the passification of the VSDS control law (energy tank +conservative potential),
+// and also the damping injection
+// For more details, please check https://ieeexplore.ieee.org/abstract/document/10288346
+
 ClosedLoopControl::ClosedLoopControl( int M):
     n_DOF_(M)
 
@@ -123,8 +127,6 @@ PassiveClosedLoopControl::PassiveClosedLoopControl(int M,Vec x_0,Vec x_att_):
 
     ko_=0*x_att_ ;
     ko_<< 0.50, 0.55;
-    ko_<< 0.20, 0.15;
-     
 
     beta_=1 ;
     gamma_=beta_ ;

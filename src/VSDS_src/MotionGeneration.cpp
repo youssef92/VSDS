@@ -56,7 +56,7 @@ VSDS::VSDS(Vec x0):
 
     string file_forcefields= packPath + "/config/"+ DS_ModelName+ "/force_fields.txt";
 
-    GlobalDS_  = global_ds() ;
+    GlobalDS_  = global_ds(n_DOF_) ;
 
     Force_fields_=Mat::Ones(n_DOF_,N_) ;
     att_=Vec::Zero(n_DOF_) ;
@@ -142,6 +142,7 @@ Mat VSDS::GetTempPoints(Vec x0, realtype dt, realtype threshold, bool first_gen)
     realtype l_sum;
 
     while ((xnow - att_).norm() > threshold) {
+        xd= att_ ;
         xd = pre_scale_* GlobalDS_.global_ds_eval(xnow);
 
         x_temp = PushBackColumn(x_temp, xnow);
@@ -244,9 +245,11 @@ Vec VSDS::GetDesiredForce(Vec x,Vec x_dot,Vec q)
 
     Vec g = Omega(x_t);
     realtype act = StartActivation(x_t);
+
     Vec x_dot_d=pre_scale_*GlobalDS_ .global_ds_eval(x_t) ;
 
     Mat Q = GlobalDS_.FindDampingBasis(GlobalDS_ .global_ds_eval(x_t));
+
 
     Vec F_control(2*n_DOF_) ;
 
@@ -255,12 +258,7 @@ Vec VSDS::GetDesiredForce(Vec x,Vec x_dot,Vec q)
         for (int i=0; i<K_; i++)
         {
 
-            if(VarDamping_Flag_ && ForceField_Flag_){
-
-                fl.col(i) =(g(i) * A_.block(0,n_DOF_*i,n_DOF_,n_DOF_) * (x_t - x_rec_.block(0,i+1,n_DOF_,1)) ) ;
-            }
-
-            else if(VarDamping_Flag_){
+            if(VarDamping_Flag_){
                 Mat D_k(2,2) ;
                 D_k.diagonal()=Damping_Fields_.block(0,i,n_DOF_,1) ;
                 fl.col(i) =(g(i) * A_.block(0,n_DOF_*i,n_DOF_,n_DOF_) * (x_t - x_rec_.block(0,i+1,n_DOF_,1)) ) + 1*g(i)*D_k*x_dot_d  ;
@@ -270,20 +268,19 @@ Vec VSDS::GetDesiredForce(Vec x,Vec x_dot,Vec q)
             else if (ForceField_Flag_){
                 Mat D_k(2,2) ;
                 Mat L= Mat::Identity(2,2) ;
-                L(0,0)=0.79 ; // 0.55
-                L(1,1)=0.79; //0.37 for LASA DataSet
+                L(0,0)=0.8 ;
+                L(1,1)=0.8;
                 D_k=-A_.block(0,n_DOF_*i,n_DOF_,n_DOF_)*6 ;
                 D_k= 2*L*D_k.pow(0.5) ;
                 D_k = Q * D_k * Q.transpose();
-
                 fl.col(i) =(g(i) * A_.block(0,n_DOF_*i,n_DOF_,n_DOF_) * (x_t - x_rec_.block(0,i+1,n_DOF_,1)) ) + g(i)*Force_fields_.block(0,i,n_DOF_,1)   ; // Add local force fields to improve tracking
                 fd.col(i)=- g(i)*D_k*(x_dot_t) ;
 
             }
             else{
                 Mat D_k(2,2) ;
-                D_k=-A_.block(0,n_DOF_*i,n_DOF_,n_DOF_)*4 ; //6
-                D_k= 2*0.33*special_math_functions::Eig_Decomp_Sqrt(D_k) ; //0.47 or 0.59
+                D_k=-A_.block(0,n_DOF_*i,n_DOF_,n_DOF_)*4 ;
+                D_k= 2*0.33*special_math_functions::Eig_Decomp_Sqrt(D_k) ;
                 fl.col(i) =(g(i) * A_.block(0,n_DOF_*i,n_DOF_,n_DOF_) * (x_t - x_rec_.block(0,i+1,n_DOF_,1)) ) ;
                 fd.col(i)=- g(i)*D_k*(x_dot_t) ;
             }
