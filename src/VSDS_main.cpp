@@ -17,7 +17,6 @@
 
 #include "boost/filesystem.hpp"
 
-#include "MotionGeneration.h"
 #include "PassiveControl.h"
 #include "Utility_fri.h"
 #include "VSDS_base.h"

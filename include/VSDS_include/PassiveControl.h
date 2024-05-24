@@ -3,7 +3,7 @@
 
 
 #include "Utility.h"
-#include "MotionGeneration.h"
+#include "VSDS_base.h"
 
 
 class ClosedLoopControl {

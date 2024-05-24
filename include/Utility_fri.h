@@ -17,7 +17,7 @@
 #include "dhdc.h"
 #include "drdc.h"
 #include <signal.h>
-#include "MotionGeneration.h"
+#include "VSDS_base.h"
 #include "min_jerk.h"
 
 

@@ -102,7 +102,6 @@ include_directories(
 
 set( sources_vsds
   src/VSDS_src/PassiveControl.cpp
-  src/VSDS_src/MotionGeneration.cpp
   src/VSDS_src/Utility.cpp
   src/VSDS_src/min_jerk.cpp
   src/VSDS_src/global_ds.cpp
