@@ -3,10 +3,16 @@
 Copyright (C) 2023, by Youssef Michel.
 
 The project provides the C++ implementation of the VSDS approach which aims to generate a force field
-based on a first order DS and a desired stiffness profile in a closed loop configuration. For more details, please check:
+based on a first order DS and a desired stiffness profile in a closed loop configuration. The streamlines of the VSDS controller are illustrated below
+
+<p float="left">
+  <img src="images/vsds_1.png" width="400" />
+  <img src="images/vsds_2.png" width="400" /> 
+</p>
+
+For more details, please check:
 
 > [1] Y. Michel, M. Saveriano, and D. Lee, "A Passivity-Based Approach for Variable Stiffness Control With Dynamical Systems," IEEE Transactions on Automation Science and Engineering (TASE), 2023.
-
 
 The main scripts in this folder are:
 
