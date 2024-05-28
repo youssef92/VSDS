@@ -16,7 +16,7 @@ For more details, please check:
 
 The main scripts in this folder are:
 
-- `VSDS_base.cpp`: contains the base class implementation of the VSDS algorithm for the orientation case. The `/config` folder contains the parameters used by VSDS such as the via-points definition, initial and goal orientation.
+- `VSDS_base.cpp`: contains the base class implementation of the VSDS algorithm for the translation case. The `/config` folder contains the parameters used by VSDS such as the via-points definition, initial and goal orientation.
 
 - `VSDS_qp.cpp`, `VSDS_vf.cpp`, `VSDS_org.cpp` provide the implementation of the specfic VSDS approach chosen. For more details check the above paper
  to the robot. Override the implementation based on your speficic robot.
