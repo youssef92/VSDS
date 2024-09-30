@@ -2,7 +2,7 @@
 
 Copyright (C) 2023, by Youssef Michel.
 
-The project provides the C++ implementation of the VSDS approach which aims to generate a force field
+The project provides the C++ implementation of the Variable Stiffness Dynamical System (VSDS) approach which aims to generate a force field
 based on a first order DS and a desired stiffness profile in a closed loop configuration. The streamlines of the VSDS controller are illustrated below
 
 <p float="left">
