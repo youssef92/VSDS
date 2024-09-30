@@ -13,7 +13,7 @@
 
 
 
-#include "VSDS_base.h"
+#include "vsds_base.h"
 #include "cmath"
 #include "eigen3/Eigen/Dense"
 
@@ -24,6 +24,7 @@ using namespace Eigen;
 
 #include <iostream>
 
+namespace vsds_transl_control {
 
 void VSDS_base:: Read_ForceFields_FromFile(string file_forcefields, Mat &Force_fields, int M, int N_viapoints){
 
@@ -55,13 +56,13 @@ VSDS_base::VSDS_base(Vec x0):
     node_handle_.getParam("/pre_scale",prescale) ;
 
 
-    N_= 20 ;
+    n_VSDS_= 20 ;
     x_rec_= x0 ;
-    if ( ! ros::param::get("/N_VSDS",N_) ){
+    if ( ! ros::param::get("/N_VSDS",n_VSDS_) ){
     ROS_WARN("Number of Via Points !!");
     }
 
-    N_init_= N_ ;
+    N_init_= n_VSDS_ ;
     n_DOF_=2 ;
     sigmascale_=1.0 ;
 
@@ -71,19 +72,19 @@ VSDS_base::VSDS_base(Vec x0):
 
     string file_forcefields= packPath + "/config/"+ DS_ModelName+ "/force_fields.txt";
 
-    GlobalDS_  = global_ds(n_DOF_) ;
+    GlobalDS_  = GlobalDS(n_DOF_) ;
     att_=Vec::Zero(n_DOF_) ;
     att_= GlobalDS_.GetAttractor() ;
 
-    Force_fields_=Mat::Ones(n_DOF_,N_) ;
+    Force_fields_=Mat::Ones(n_DOF_,n_VSDS_) ;
 
-    Read_ForceFields_FromFile( file_forcefields,   Force_fields_, n_DOF_, N_) ;
+    Read_ForceFields_FromFile( file_forcefields,   Force_fields_, n_DOF_, n_VSDS_) ;
 
     realtype  damping_vf=230  ;
     if ( ! node_handle_.getParam("/damping_vf",damping_vf))
         ROS_WARN("Damping Gain for VF condition Not Found !! ");
 
-    Mat Damping_fields=Mat::Ones(n_DOF_,N_) ;
+    Mat Damping_fields=Mat::Ones(n_DOF_,n_VSDS_) ;
     Damping_fields.row(0)=Damping_fields.row(0)*damping_vf ;
     Damping_fields.row(1)=Damping_fields.row(1)*damping_vf;
 
@@ -98,15 +99,15 @@ VSDS_base::VSDS_base(Vec x0):
     cout <<"x0: "<<x0.transpose() <<endl ;
     xtemp = GetTempPoints(x0, dt_, threshold_tube_, true);
     GetViaPointsReduced(xtemp,x0);
-    GetABMatrix();
+    Get_A_matrix();
 
    ROS_INFO("Initialized VSDS !!! ");
 }
 
 
-Vec VSDS_base::Omega(Vec x)
+Vec VSDS_base::ComputeOmega(Vec x)
 {
-    Vec omega = Vec::Zero(K_);
+    Vec omega = Vec::Zero(n_viapoints_);
     Vec delta = sigmascale_ * x_len_;
     Vec x_t(n_DOF_);
     if (x.size() == 3 && n_DOF_ == 2){
@@ -117,7 +118,7 @@ Vec VSDS_base::Omega(Vec x)
         x_t = x;
     };
 
-    for(int i=0;i <K_;i++){
+    for(int i=0;i <n_viapoints_;i++){
         omega(i) = exp(-(1/(2*delta(i)*delta(i)))*(x_t-x_cen_.block(0,i,n_DOF_,1)).transpose()*(x_t-x_cen_.block(0,i,n_DOF_,1)));
     }
 
@@ -135,7 +136,7 @@ Mat VSDS_base::GetTempPoints(Vec x0, realtype dt, realtype threshold, bool first
 
     while ((xnow - att_).norm() > threshold) {
 
-        xd = pre_scale_* GlobalDS_.global_ds_eval(xnow);
+        xd = pre_scale_* GlobalDS_.GlobalDS_eval(xnow);
 
         x_temp = PushBackColumn(x_temp, xnow);
         xnow = xnow + dt*xd;
@@ -149,7 +150,7 @@ Mat VSDS_base::GetTempPoints(Vec x0, realtype dt, realtype threshold, bool first
         traj_len_ = l_sum;
     }
     else{
-        N_ = (int)ceil(N_init_ * (l_sum / traj_len_));
+        n_VSDS_ = (int)ceil(N_init_ * (l_sum / traj_len_));
     }
 
     return x_temp;
@@ -162,14 +163,14 @@ void VSDS_base::GetViaPointsReduced(Mat& x_temp, Vec x0)
     int i = 1;
     int j = 0;
     Vec xnow = x0;
-    Vec len(N_);
+    Vec len(n_VSDS_);
     Vec x_len_temp = (x_temp.block(0,0,n_DOF_,x_temp.cols()-1) - x_temp.block(0,1,n_DOF_,x_temp.cols()-1)).colwise().norm();
     realtype l_sum = x_len_temp.sum();
-    realtype len_sub = l_sum/(N_);
-    for (int j=0; j<N_-1; j++){
+    realtype len_sub = l_sum/(n_VSDS_);
+    for (int j=0; j<n_VSDS_-1; j++){
         len(j) = (j+1)*len_sub;
     }
-    len(N_-1) = l_sum;
+    len(n_VSDS_-1) = l_sum;
     j = 0;
     while (i < temp_size) {
         if (dis < len(j)) {
@@ -185,7 +186,7 @@ void VSDS_base::GetViaPointsReduced(Mat& x_temp, Vec x0)
         }
     }
     x_rec_ = PushBackColumn(x_rec_, att_);
-    K_ = x_rec_.cols()-1;
+    n_viapoints_ = x_rec_.cols()-1;
     x_cen_ = (x_rec_.block(0,0,n_DOF_,x_rec_.cols()-1) + x_rec_.block(0,1,n_DOF_,x_rec_.cols()-1))/2;
     x_len_ = (x_rec_.block(0,0,n_DOF_,x_rec_.cols()-1) - x_rec_.block(0,1,n_DOF_,x_rec_.cols()-1)).colwise().norm();
 
@@ -196,15 +197,15 @@ Mat VSDS_base::GetX_rec(){
     return x_rec_ ;
 }
 
-void VSDS_base::GetABMatrix()
+void VSDS_base::Get_A_matrix()
 {
     Mat B_temp;
     Mat A_temp;
-    for (int i=0; i<K_; i++)
+    for (int i=0; i<n_viapoints_; i++)
     {
         B_temp = GlobalDS_.FindDampingBasis(x_rec_.block(0,i+1,n_DOF_,1) - x_rec_.block(0,i,n_DOF_,1));
         A_temp = -B_temp * GetStiffness(x_rec_.block(0,i,n_DOF_,1)) * B_temp.transpose();
-        B_ = PushBackColumnMat(B_,B_temp);
+      //  B_ = PushBackColumnMat(B_,B_temp);
         A_ = PushBackColumnMat(A_,A_temp);
     }
     return;
@@ -295,7 +296,7 @@ Mat VSDS_base::GetStiffness(Vec x)
 
 realtype VSDS_base::PosCheck(Vec x)
 {
-    Vec omega = Vec::Zero(K_);
+    Vec omega = Vec::Zero(n_viapoints_);
     Vec delta = sigmascale_ * x_len_;
     Vec x_t(n_DOF_);
     if (x.size() == 3 && n_DOF_ == 2){
@@ -306,7 +307,7 @@ realtype VSDS_base::PosCheck(Vec x)
         x_t = x;
     };
 
-    for(int i=0;i <K_;i++){
+    for(int i=0;i <n_viapoints_;i++){
         omega(i) = exp(-(1/(2*delta(i)*delta(i)))*(x_t-x_cen_.block(0,i,n_DOF_,1)).transpose()*(x_t-x_cen_.block(0,i,n_DOF_,1)));
     }
     realtype omega_sum = omega.sum();
@@ -322,12 +323,12 @@ void VSDS_base::MotionRegenerate(Vec x)
     Mat xtemp;
     x_rec_ = x0_;
     Mat A_new;
-    Mat B_new;
+   // Mat B_new;
     A_ = A_new;
-    B_ = B_new;
+  //  B_ = B_new;
     xtemp = GetTempPoints(x0_, dt_, threshold_tube_, false);
     GetViaPointsReduced(xtemp,x0_);
-    GetABMatrix();
+    Get_A_matrix();
 }
 
 
@@ -335,4 +336,4 @@ Vec VSDS_base::GetAttractor() {
     return att_ ;
 }
 
-
+}

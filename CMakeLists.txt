@@ -86,9 +86,9 @@ set( sources_irml
 )
 
 set( sources_main
-     src/VSDS_main.cpp
-     src/RunTrajectorySimple.cpp
-     src/Utility_fri.cpp
+     src/vsds_main.cpp
+     src/run_trajectory_simple.cpp
+     src/utility_fri.cpp
      
 )
 include_directories(
@@ -101,15 +101,15 @@ include_directories(
 )
 
 set( sources_vsds
-  src/VSDS_src/PassiveControl.cpp
-  src/VSDS_src/Utility.cpp
-  src/VSDS_src/min_jerk.cpp
+  src/VSDS_src/passive_control.cpp
+  src/utility.cpp
+  src/min_jerk.cpp
   src/VSDS_src/global_ds.cpp
-  src/VSDS_src/VSDS_base.cpp
-  src/VSDS_src/VSDS_qp.cpp
-  src/VSDS_src/VSDS_vf.cpp
-  src/VSDS_src/VSDS_org.cpp
-  src/VSDS_src/VSDS_picds.cpp
+  src/VSDS_src/vsds_base.cpp
+  src/VSDS_src/vsds_qp.cpp
+  src/VSDS_src/vsds_vf.cpp
+  src/VSDS_src/vsds_org.cpp
+  src/VSDS_src/vsds_picds.cpp
 
 )
 

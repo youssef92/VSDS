@@ -8,7 +8,7 @@
  */
 
 
-#include "VSDS_base.h"
+#include "vsds_base.h"
 #include "cmath"
 #include "eigen3/Eigen/Dense"
 
@@ -19,7 +19,7 @@ using namespace Eigen;
 
 #include <iostream>
 
-
+namespace vsds_transl_control {
 
 Vec VSDS_picds::GetDesiredForce(Vec x,Vec x_dot,Vec q)
 {
@@ -39,8 +39,8 @@ Vec VSDS_picds::GetDesiredForce(Vec x,Vec x_dot,Vec q)
 
     };
 
-    Vec g = Omega(x_t);
-    Mat Q = GlobalDS_.FindDampingBasis(GlobalDS_ .global_ds_eval(x_t));
+    Vec g = ComputeOmega(x_t);
+    Mat Q = GlobalDS_.FindDampingBasis(GlobalDS_ .GlobalDS_eval(x_t));
     Vec F_control(2*n_DOF_) ;
 
     std::vector<double> d_picds;
@@ -55,10 +55,11 @@ Vec VSDS_picds::GetDesiredForce(Vec x,Vec x_dot,Vec q)
 
 
     Mat D_PICDS=Q * L * Q.transpose();
-    Vec x_dot_d=pre_scale_*GlobalDS_ .global_ds_eval(x_t) ;
+    Vec x_dot_d=pre_scale_*GlobalDS_ .GlobalDS_eval(x_t) ;
     Vec F_PICDS= D_PICDS*(x_dot_d - x_dot_t) ;
     F_control << F_PICDS , Vec::Zero(n_DOF_) ;
 
 
     return F_control;
+}
 }

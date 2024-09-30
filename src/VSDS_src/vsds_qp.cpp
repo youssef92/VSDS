@@ -7,7 +7,7 @@
  */
 
 
-#include "VSDS_base.h"
+#include "vsds_base.h"
 #include "cmath"
 #include "eigen3/Eigen/Dense"
 
@@ -17,7 +17,7 @@ using Eigen::MatrixXd;
 using namespace Eigen;
 
 #include <iostream>
-
+namespace vsds_transl_control {
 Vec VSDS_qp::GetDesiredForce(Vec x,Vec x_dot,Vec q)
 {
     Vec x_t(n_DOF_);
@@ -38,15 +38,15 @@ Vec VSDS_qp::GetDesiredForce(Vec x,Vec x_dot,Vec q)
 
     };
 
-    Mat fl = Mat::Zero(n_DOF_,K_);
-    Mat fd = Mat::Zero(n_DOF_,K_);
+    Mat fl = Mat::Zero(n_DOF_,n_viapoints_);
+    Mat fd = Mat::Zero(n_DOF_,n_viapoints_);
 
-    Vec g = Omega(x_t);
+    Vec g = ComputeOmega(x_t);
     realtype act = StartActivation(x_t);
-    Mat Q = GlobalDS_.FindDampingBasis(GlobalDS_ .global_ds_eval(x_t));
+    Mat Q = GlobalDS_.FindDampingBasis(GlobalDS_ .GlobalDS_eval(x_t));
     Vec F_control(2*n_DOF_) ;
 
-        for (int i=0; i<K_; i++)
+        for (int i=0; i<n_viapoints_; i++)
         {
 
                 Mat D_k(2,2) ;
@@ -71,4 +71,5 @@ Vec VSDS_qp::GetDesiredForce(Vec x,Vec x_dot,Vec q)
 
 
     return F_control;
+}
 }

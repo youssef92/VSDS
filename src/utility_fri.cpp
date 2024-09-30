@@ -1,7 +1,10 @@
 
 
 
-#include "Utility_fri.h"
+#include "utility_fri.h"
+
+namespace utility_fri {
+
 
 int startCartImpedanceCtrl(FastResearchInterface *fri, float *commCartPose){
     unsigned int controlScheme = FastResearchInterface::CART_IMPEDANCE_CONTROL;
@@ -597,4 +600,5 @@ Vec Quart_Orient_err(Mat R_a, Mat R_d){
     error << error_quaternion.x(), error_quaternion.y(), error_quaternion.z();
     error<< R_a * error;
     return error ;
+}
 }

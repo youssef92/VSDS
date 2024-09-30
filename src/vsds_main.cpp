@@ -17,11 +17,14 @@
 
 #include "boost/filesystem.hpp"
 
-#include "PassiveControl.h"
-#include "Utility_fri.h"
-#include "VSDS_base.h"
+#include "passive_control.h"
+#include "utility_fri.h"
+#include "vsds_base.h"
 
 using namespace boost::filesystem;
+
+using namespace vsds_transl_control ;
+using namespace utility_fri ;
 
 
 
@@ -131,7 +134,7 @@ int main(int argc, char *argv[])
                     MyVSDS = std::make_unique<VSDS_qp>(x0.tail(2));
                 }
                 else if (VS_type == "fd") {
-                    MyVSDS = std::make_unique<VSDS_qp>(x0.tail(2));
+                    MyVSDS = std::make_unique<VSDS_vf>(x0.tail(2));
                 }
                 else if (VS_type == "PI") {
                     MyVSDS = std::make_unique<VSDS_picds>(x0.tail(2));
@@ -141,7 +144,7 @@ int main(int argc, char *argv[])
                    MyVSDS = std::make_unique<VSDS_org>(x0.tail(2));
                 }
 
-                global_ds MyGlobalDS =global_ds(M) ;
+                GlobalDS MyGlobalDS =GlobalDS(M) ;
                 PassiveClosedLoopControl *my_control_passive  ;
                 my_control_passive = new PassiveClosedLoopControl( M,x0.tail(2),MyVSDS->GetAttractor() );
 
@@ -225,7 +228,7 @@ int main(int argc, char *argv[])
 
                     // Get Desired Force
                     Vec Force_d =  MyVSDS->GetDesiredForce(x,x_dot_estimated,q);
-                    Vec x_dot_gds = MyGlobalDS.global_ds_eval(x.tail(2)) ;
+                    Vec x_dot_gds = MyGlobalDS.GlobalDS_eval(x.tail(2)) ;
 
                     // Get Control Force Passive
                     Vec F_x_passive=my_control_passive->GetControlForce_Passive(Force_d,x_dot_estimated, x_c, x,FRI->GetFRICycleTime()) ;

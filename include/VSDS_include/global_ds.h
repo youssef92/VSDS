@@ -1,7 +1,7 @@
 #ifndef GLOBALDS_H_
 #define GLOBALDS_H_
 
-#include "Utility.h"
+#include "utility.h"
 #include "cmath"
 #include <iostream>
 #include "cmath"
@@ -11,7 +11,7 @@ using namespace GeneralFunction;
 
 
 
-class global_ds{
+class GlobalDS{
 
 private:
 
@@ -25,10 +25,10 @@ Vec att_;
 
 public:
 
-    global_ds(int n_dof) ;
-    global_ds() ;
+    GlobalDS(int n_dof) ;
+    GlobalDS() ;
 
-    Vec global_ds_eval(Vec x) ;
+    Vec GlobalDS_eval(Vec x) ;
     realtype gaussPDF(Vec Data_in, Vec Mu , Mat Sigma) ;
     void Read_SEDS_FROMFile(string MuFile, string SigmaFile, string PriorsFile, string A_gFile,string att_File,Mat &Mu, Mat &Sigma, Vec &Priors, Mat &A_g, int M, int K_SEDS,Vec &att) ;
     Vec GetAttractor()  ;

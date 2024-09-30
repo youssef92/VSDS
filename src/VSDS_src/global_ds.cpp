@@ -2,11 +2,11 @@
 
 #include "global_ds.h"
 
-global_ds::global_ds() {
+GlobalDS::GlobalDS() {
 
 }
 
-void global_ds::Read_SEDS_FROMFile(string MuFile, string SigmaFile, string PriorsFile, string A_gFile,string att_File,Mat &Mu, Mat &Sigma, Vec &Priors, Mat &A_g, int M, int K_SEDS,Vec &att){
+void GlobalDS::Read_SEDS_FROMFile(string MuFile, string SigmaFile, string PriorsFile, string A_gFile,string att_File,Mat &Mu, Mat &Sigma, Vec &Priors, Mat &A_g, int M, int K_SEDS,Vec &att){
 
 
     std::ifstream MuFileRead;
@@ -84,7 +84,7 @@ void global_ds::Read_SEDS_FROMFile(string MuFile, string SigmaFile, string Prior
 
 
 
-global_ds::global_ds(int n_dof)  {
+GlobalDS::GlobalDS(int n_dof)  {
 
 
 int K_SEDS=3 ;
@@ -113,7 +113,7 @@ ROS_INFO("Initialized Global DS ! ");
 
 }
 
-Mat global_ds::FindDampingBasis(Vec x)
+Mat GlobalDS::FindDampingBasis(Vec x)
 {
     if (n_DOF_ == 2){
         Vec y(n_DOF_);
@@ -138,7 +138,7 @@ Mat global_ds::FindDampingBasis(Vec x)
 
 
 
-Vec global_ds::global_ds_eval(Vec x) {
+Vec GlobalDS::GlobalDS_eval(Vec x) {
 
     int K_g = Priors_.size();
     Mat fg = Mat::Zero(n_DOF_,K_g);
@@ -165,6 +165,6 @@ Vec global_ds::global_ds_eval(Vec x) {
 
 }
 
-Vec global_ds::GetAttractor() {
+Vec GlobalDS::GetAttractor() {
     return att_ ;
 }

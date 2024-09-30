@@ -1,4 +1,4 @@
-#include "PassiveControl.h"
+#include "passive_control.h"
 #include "iostream"
 #include "eigen3/Eigen/Dense"
 #include "cmath"
@@ -11,9 +11,11 @@ using namespace std;
 using namespace special_math_functions;
 using namespace StiffnessProfiles;
 
-// Implements the passification of the VSDS control law (energy tank +conservative potential),
-// and also the damping injection
-// For more details, please check https://ieeexplore.ieee.org/abstract/document/10288346
+
+
+namespace vsds_transl_control {
+
+
 
 ClosedLoopControl::ClosedLoopControl( int M):
     n_DOF_(M)
@@ -357,4 +359,5 @@ realtype PassiveClosedLoopControl::smooth_fall_gamma(realtype val,realtype hi, r
 
 }
 
+}
 

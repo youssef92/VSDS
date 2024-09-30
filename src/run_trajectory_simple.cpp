@@ -1,5 +1,5 @@
 //  ---------------------- Doxygen info ----------------------
-//! \file RunTrajectorySimple.cpp
+//! \file run_trajectory_simple.cpp
 //!
 //! \brief
 //! Implementation file for executing motion trajectories in the test

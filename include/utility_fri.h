@@ -17,8 +17,10 @@
 #include "dhdc.h"
 #include "drdc.h"
 #include <signal.h>
-#include "VSDS_base.h"
+#include "vsds_base.h"
 #include "min_jerk.h"
+
+namespace utility_fri {
 
 
 #ifndef LWR_JNT_NUM
@@ -65,3 +67,4 @@ int JointGravityCompensation(FastResearchInterface *FRI, float tot_time) ;
 int CartesianGravityCompensation_YZ(FastResearchInterface *FRI, float tot_time) ;
 
 Vec ApplyDisturbance(realtype F_distMag,realtype t,realtype t_init,realtype t_final, Vec Des_vel) ;
+}

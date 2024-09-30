@@ -2,10 +2,15 @@
 #define PASSIVECONTROL_H
 
 
-#include "Utility.h"
-#include "VSDS_base.h"
+#include "utility.h"
+#include "vsds_base.h"
+
+// Implements the passification of the VSDS control law (energy tank +conservative potential),
+// and also the damping injection
+// For more details, please check https://ieeexplore.ieee.org/abstract/document/10288346
 
 
+namespace vsds_transl_control{
 class ClosedLoopControl {
 protected:
     Mat D_eig_;
@@ -62,6 +67,7 @@ public:
     realtype Get_Pow_VSDS_aka_z() ;
 
 } ;
+}
 
 #endif
 
