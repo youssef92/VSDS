@@ -6,8 +6,8 @@ The project provides the C++ implementation of the Variable Stiffness Dynamical 
 based on a first order DS and a desired stiffness profile in a closed loop configuration. The streamlines of the VSDS controller are illustrated below
 
 <p float="left">
-  <img src="images/vsds_1.png" width="400" />
-  <img src="images/vsds_2.png" width="400" /> 
+  <img src="images/vsds_1.png" width="300" />
+  <img src="images/vsds_2.png" width="300" />
 </p>
 
 For more details, please check:
